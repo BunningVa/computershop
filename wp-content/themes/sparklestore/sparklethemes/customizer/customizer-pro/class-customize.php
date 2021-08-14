@@ -1,0 +1,116 @@
+<?php
+/**
+ * Singleton class for handling the theme's customizer integration.
+ *
+ * @since  1.0.0
+ * @access public
+ */
+final class Sparklestore_Customize {
+
+	/**
+	 * Returns the instance.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return object
+	 */
+	public static function get_instance() {
+
+		static $instance = null;
+
+		if ( is_null( $instance ) ) {
+			$instance = new self;
+			$instance->setup_actions();
+		}
+
+		return $instance;
+	}
+
+	/**
+	 * Constructor method.
+	 *
+	 * @since  1.0.0
+	 * @access private
+	 * @return void
+	 */
+	private function __construct() {}
+
+	/**
+	 * Sets up initial actions.
+	 *
+	 * @since  1.0.0
+	 * @access private
+	 * @return void
+	 */
+	private function setup_actions() {
+
+		// Register panels, sections, settings, controls, and partials.
+		add_action( 'customize_register', array( $this, 'sections' ) );
+
+		// Register scripts and styles for the controls.
+		add_action( 'customize_controls_enqueue_scripts', array( $this, 'sparklestore_enqueue_control_scripts' ), 0 );
+	}
+
+	/**
+	 * Sets up the customizer sections.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @param  object  $manager
+	 * @return void
+	 */
+	public function sections( $manager ) {
+
+		// Load custom sections.
+		require_once get_theme_file_path('sparklethemes/customizer/customizer-pro/section-pro.php');
+
+		// Register custom section types.
+		$manager->register_section_type( 'Sparklestore_Customize_Section_Pro' );
+
+		// Register sections.
+		$manager->add_section(
+			new Sparklestore_Customize_Section_Pro(
+				$manager,
+				'sparklestore',
+				array(
+					'title'    => '',
+					'pro_text' => esc_html__( 'Upgrade To Pro','sparklestore' ),
+					'pro_url'  => 'https://sparklewpthemes.com/wordpress-themes/best-premium-ecommerce-themes/',
+					'priority'  => 1,
+				)
+			)
+		);
+
+
+		// Register Documentation Section.
+		$manager->add_section(
+			new Sparklestore_Customize_Section_Pro(
+				$manager,
+				'sparklestoredoc',
+				array(
+					'title'    => esc_html__( 'Documentation', 'sparklestore' ),
+					'pro_text' => esc_html__( 'View','sparklestore' ),
+					'pro_url'  => 'http://docs.sparklewpthemes.com/sparklestore/',
+					'priority'  => 1,
+				)
+			)
+		);
+	}
+
+	/**
+	 * Loads theme customizer CSS.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function sparklestore_enqueue_control_scripts() {
+
+		wp_enqueue_script( 'sparklestore-customize-controls', trailingslashit( get_template_directory_uri() ) . 'sparklethemes/customizer/customizer-pro/customize-controls.js', array( 'customize-controls' ) );
+
+		wp_enqueue_style( 'sparklestore-customize-controls', trailingslashit( get_template_directory_uri() ) . 'sparklethemes/customizer/customizer-pro/customize-controls.css' );
+	}
+}
+
+// Doing this customizer thang!
+Sparklestore_Customize::get_instance();

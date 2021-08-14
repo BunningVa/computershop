@@ -1,0 +1,25 @@
+#customize-controls .control-section-sparklestore .accordion-section-title:hover,
+#customize-controls .control-section-sparklestore .accordion-section-title:focus {
+	background-color: #fff;
+}
+
+.rtl .control-section-sparklestore .accordion-section-title .button {
+	margin-left:  0;
+	margin-right: 8px;
+}
+
+#accordion-section-sparklestore .accordion-section-title .button {
+    display: block;
+    text-align: center;
+    line-height: 38px;
+    text-transform: uppercase;
+    padding: 0 25px 0;
+}
+
+#accordion-section-sparklestore .accordion-section-title:before{
+    display:none;
+}
+
+#accordion-section-sparklestoredoc .accordion-section-title .button {
+    float: right;
+}
